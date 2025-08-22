@@ -27,7 +27,6 @@ export default function RootLayout({
             attribute="class"
             defaultTheme="system"
             enableColorScheme
-            // enableSystem
             disableTransitionOnChange
           >
             {children}

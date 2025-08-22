@@ -1,0 +1,29 @@
+import { relations } from 'drizzle-orm';
+import { pgEnum, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import { createdAt, id, updatedAt } from '../schemaHelpers';
+import { JobInfoTable } from './jobInfo';
+
+export const questionDifficulties = ['easy', 'medium', 'hard'] as const;
+export const questionDifficultyEnum = pgEnum(
+  'questions_questions_difficulties',
+  questionDifficulties
+);
+export type questionDifficulty = (typeof questionDifficulties)[number];
+
+export const QuestionTable = pgTable('questions', {
+  id,
+  jobInfoId: uuid()
+    .references(() => JobInfoTable.id, { onDelete: 'cascade' })
+    .notNull(),
+  text: varchar().notNull(),
+  difficulty: questionDifficultyEnum().notNull(),
+  createdAt,
+  updatedAt,
+});
+
+export const questionsRelations = relations(QuestionTable, ({ one }) => ({
+  jobInfo: one(JobInfoTable, {
+    fields: [QuestionTable.jobInfoId],
+    references: [JobInfoTable.id],
+  }),
+}));
