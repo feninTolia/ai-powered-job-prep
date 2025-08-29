@@ -23,11 +23,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { experienceLevels, JobInfoTable } from '@/drizzle/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { createJobInfo, updateJobInfo } from '../actions';
 import { formatExperienceLevel } from '../lib/formatters';
 import { jobInfoSchema } from '../schemas';
-import { toast } from 'sonner';
 
 const JobInfoFrom = ({
   jobInfo,
