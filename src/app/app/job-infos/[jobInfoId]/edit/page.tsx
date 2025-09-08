@@ -38,8 +38,6 @@ const JobInfoEditPage = async ({ params }: Props) => {
 export default JobInfoEditPage;
 
 async function SuspendedForm({ jobInfoId }: { jobInfoId: string }) {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-
   const jobInfo = await getCurrentUser().then(
     async ({ userId, redirectToSignIn }) => {
       if (userId == null) return redirectToSignIn();
