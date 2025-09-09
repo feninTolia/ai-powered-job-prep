@@ -8,7 +8,7 @@ import {
 } from '@/features/interviews/actions';
 import { errorToast } from '@/lib/errorToast';
 import CondensedMessages from '@/services/hume/components/CondensedMessages';
-import { condensedChatMessages } from '@/services/hume/lib/condensedChatMessages';
+import { condenseChatMessages } from '@/services/hume/lib/condenseChatMessages';
 import { useVoice, VoiceReadyState } from '@humeai/voice-react';
 import { Loader2, Mic, MicOff, PhoneOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -123,7 +123,7 @@ function Messages({ user }: { user: { name: string; imageUrl: string } }) {
   const { messages, fft } = useVoice();
 
   const condensedMessages = useMemo(() => {
-    return condensedChatMessages(messages);
+    return condenseChatMessages(messages);
   }, [messages]);
 
   return (

@@ -11,14 +11,14 @@ type Props = {
     name: string;
     imageUrl: string;
   };
-  maxFft: number;
-  className: string;
+  maxFft?: number;
+  className?: string;
 };
 
 export default function CondensedMessages({
   messages,
   user,
-  maxFft,
+  maxFft = 0,
   className,
 }: Props) {
   return (
