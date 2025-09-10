@@ -1,19 +1,34 @@
 'use server';
 
+import { env } from '@/data/env/server';
 import { db } from '@/drizzle/db';
 import { InterviewTable, JobInfoTable } from '@/drizzle/schema';
+import { PLAN_LIMIT_MESSAGE, RATE_LIMIT_MESSAGE } from '@/lib/errorToast';
 import { getCurrentUser } from '@/services/clerk/lib/getCurrentUser';
+import arcjet, { request, tokenBucket } from '@arcjet/next';
 import { and, eq } from 'drizzle-orm';
 import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
 import { getJobInfoIdTag } from '../jobInfos/dbCache';
 import { insertInterview, updateInterviewDb } from './db';
 import { getInterviewIdTag } from './dbCache';
 import { canCreateInterview } from './permissions';
-import { PLAN_LIMIT_MESSAGE } from '@/lib/errorToast';
 
 type ApiResponse =
   | { error: true; message: string }
   | { error: false; id: string };
+
+const aj = arcjet({
+  characteristics: ['userId'],
+  key: env.ARCJET_KEY,
+  rules: [
+    tokenBucket({
+      capacity: 12,
+      refillRate: 4,
+      interval: '1d',
+      mode: 'LIVE',
+    }),
+  ],
+});
 
 export async function createInterview({
   jobInfoId,
@@ -26,12 +41,15 @@ export async function createInterview({
     return { error: true, message: "You don't have permission to do this" };
   }
 
-  //TODO: permissions
-
+  //permissions
   if (!(await canCreateInterview())) {
     return { error: true, message: PLAN_LIMIT_MESSAGE };
   }
-  //TODO: rate limit
+  //rate limit
+  const decision = await aj.protect(await request(), { userId, requested: 1 });
+  if (decision.isDenied()) {
+    return { error: true, message: RATE_LIMIT_MESSAGE };
+  }
 
   //job info
   const jobInfo = await getJobInfo(jobInfoId, userId);
