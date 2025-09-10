@@ -8,9 +8,10 @@ import { fetchAccessToken } from 'hume';
 import { VoiceProvider } from '@humeai/voice-react';
 import { Loader2 } from 'lucide-react';
 import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import StartCall from './_StartCall';
+import { canCreateInterview } from '@/features/interviews/permissions';
 
 type Props = {
   params: Promise<{ jobInfoId: string }>;
@@ -36,6 +37,7 @@ async function SuspendedComponent({ jobInfoId }: { jobInfoId: string }) {
     allData: true,
   });
   if (userId == null || user == null) return redirectToSignIn();
+  if (!(await canCreateInterview())) return redirect('/app/upgrade');
 
   const jobInfo = await getJobInfo(jobInfoId, userId);
   if (jobInfo == null) return notFound();

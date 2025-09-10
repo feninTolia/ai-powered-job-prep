@@ -69,7 +69,6 @@ export default function StartCall({ accessToken, user, jobInfo }: Props) {
         <Button
           size="lg"
           onClick={async () => {
-            // TODO:  Create Interview
             const res = await createInterview({ jobInfoId: jobInfo.id });
             if (res.error) {
               return errorToast(res.message);

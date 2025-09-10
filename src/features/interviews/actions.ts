@@ -8,6 +8,8 @@ import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
 import { getJobInfoIdTag } from '../jobInfos/dbCache';
 import { insertInterview, updateInterviewDb } from './db';
 import { getInterviewIdTag } from './dbCache';
+import { canCreateInterview } from './permissions';
+import { PLAN_LIMIT_MESSAGE } from '@/lib/errorToast';
 
 type ApiResponse =
   | { error: true; message: string }
@@ -25,6 +27,10 @@ export async function createInterview({
   }
 
   //TODO: permissions
+
+  if (!(await canCreateInterview())) {
+    return { error: true, message: PLAN_LIMIT_MESSAGE };
+  }
   //TODO: rate limit
 
   //job info
