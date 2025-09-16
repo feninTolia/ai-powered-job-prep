@@ -8,7 +8,7 @@ export const questionDifficultyEnum = pgEnum(
   'questions_questions_difficulties',
   questionDifficulties
 );
-export type questionDifficulty = (typeof questionDifficulties)[number];
+export type QuestionDifficulty = (typeof questionDifficulties)[number];
 
 export const QuestionTable = pgTable('questions', {
   id,

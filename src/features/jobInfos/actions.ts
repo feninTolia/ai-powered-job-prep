@@ -4,7 +4,11 @@ import { getCurrentUser } from '@/services/clerk/lib/getCurrentUser';
 import z from 'zod';
 import { jobInfoSchema } from './schemas';
 import { redirect } from 'next/navigation';
-import { insertJobInfo, updateJobInfo as updateJobInfoDb } from './db';
+import {
+  getJobInfo,
+  insertJobInfo,
+  updateJobInfo as updateJobInfoDb,
+} from './db';
 import { and, eq } from 'drizzle-orm';
 import { JobInfoTable } from '@/drizzle/schema';
 import { db } from '@/drizzle/db';
@@ -67,13 +71,4 @@ export async function updateJobInfo(
   const jobInfo = await updateJobInfoDb(id, data);
 
   redirect(`/app/job-infos/${jobInfo.id}`);
-}
-
-async function getJobInfo(id: string, userId: string) {
-  'use cache';
-  cacheTag(getJobInfoIdTag(id));
-
-  return db.query.JobInfoTable.findFirst({
-    where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),
-  });
 }
