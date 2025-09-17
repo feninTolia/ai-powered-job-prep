@@ -18,15 +18,19 @@ import { ArrowRight, Loader2, PlusIcon } from 'lucide-react';
 import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { toast } from 'sonner';
 
 async function getJobInfos(userId: string) {
   'use cache';
   cacheTag(getJobInfoUserTag(userId));
-
-  return db.query.JobInfoTable.findMany({
-    where: eq(JobInfoTable.userId, userId),
-    orderBy: desc(JobInfoTable.updatedAt),
-  });
+  try {
+    return db.query.JobInfoTable.findMany({
+      where: eq(JobInfoTable.userId, userId),
+      orderBy: desc(JobInfoTable.updatedAt),
+    });
+  } catch {
+    toast.error('Failed to get job info');
+  }
 }
 
 export default function AppPage() {
@@ -50,9 +54,10 @@ async function JobInfos() {
 
   const jobInfos = await getJobInfos(userId);
 
-  if (jobInfos.length === 0) {
+  if (jobInfos == null || jobInfos.length === 0) {
     return <NoJobInfos />;
   }
+
   return (
     <div className="container my-4">
       <div className="flex gap-2 justify-between mb-6">
