@@ -17,24 +17,26 @@ export async function generateAiInterviewFeedback({
 }) {
   const messages = await fetchChatMessages(humeChatId);
 
-  const formattedMessages = messages.map((message) => {
-    if (message.type !== 'USER_MESSAGE' && message.type !== 'AGENT_MESSAGE')
-      return null;
+  const formattedMessages = messages
+    .map((message) => {
+      if (message.type !== 'USER_MESSAGE' && message.type !== 'AGENT_MESSAGE')
+        return null;
 
-    if (message.messageText == null) return null;
+      if (message.messageText == null) return null;
 
-    return {
-      speaker: message.type === 'USER_MESSAGE' ? 'interviewee' : 'interviewer',
-      message: message.messageText,
-      emotionFeatures:
-        message.role === 'USER' ? message.emotionFeatures : undefined,
-    };
-  });
+      return {
+        speaker:
+          message.type === 'USER_MESSAGE' ? 'interviewee' : 'interviewer',
+        message: message.messageText,
+        emotionFeatures:
+          message.role === 'USER' ? message.emotionFeatures : undefined,
+      };
+    })
+    .filter((f) => f != null);
 
   const { text } = await generateText({
     model: google('gemini-2.5-flash'),
     prompt: JSON.stringify(formattedMessages),
-    // @ts-expect-error experimental
     maxSteps: 10,
     experimental_continueSteps: true,
     system: `You are an expert interview coach and evaluator. Your role is to analyze a mock job interview transcript and provide clear, detailed, and structured feedback on the interviewee's performance based on the job requirements. Your output should be in markdown format.
