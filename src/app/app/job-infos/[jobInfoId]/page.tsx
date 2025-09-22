@@ -122,7 +122,9 @@ const JobInfosPage = async ({ params }: Props) => {
               <Card className="hover:shadow-lg group flex flex-row items-start justify-between h-full">
                 <CardHeader className="flex-grow">
                   <CardTitle>{option.label}</CardTitle>
-                  <CardDescription> {option.description}</CardDescription>
+                  <CardDescription className="max-w-4/5">
+                    {option.description}
+                  </CardDescription>
                 </CardHeader>
 
                 <CardContent>

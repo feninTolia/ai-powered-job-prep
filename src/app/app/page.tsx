@@ -81,27 +81,29 @@ async function JobInfos() {
           >
             <Card className="hover:shadow-lg h-full group">
               <div className="flex items-center justify-between h-full">
-                <div className="space-y-4 h-full">
+                <div className="space-y-4 h-full w-5/6 flex flex-col">
                   <CardHeader>
                     <CardTitle className="text-lg">{jobInfo.name}</CardTitle>
                   </CardHeader>
-                  <CardContent className=" text-muted-foreground line-clamp-3">
+                  <CardContent className="text-muted-foreground line-clamp-3 flex-1">
                     {jobInfo.description}
                   </CardContent>
-                  <CardFooter className="flex gap-2">
-                    <Badge variant="outline">
-                      {formatExperienceLevel(jobInfo.experienceLevel)}
-                    </Badge>
-                    {jobInfo.title && (
-                      <Badge variant="outline">{jobInfo.title}</Badge>
-                    )}
-                  </CardFooter>
                 </div>
 
                 <CardContent>
                   <ArrowRight className="size-6 group-hover:text-primary transition" />
                 </CardContent>
               </div>
+              <CardFooter className="flex gap-2 justify-start">
+                <Badge variant="outline">
+                  {formatExperienceLevel(jobInfo.experienceLevel)}
+                </Badge>
+                {jobInfo.title && (
+                  <Badge variant="outline" className="flex-auto">
+                    <div className="min-w-0 truncate">{jobInfo.title}</div>
+                  </Badge>
+                )}
+              </CardFooter>
             </Card>
           </Link>
         ))}

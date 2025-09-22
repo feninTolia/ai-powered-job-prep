@@ -1,18 +1,6 @@
-import { questionDifficulties } from '@/drizzle/schema';
-import { getJobInfo } from '@/features/jobInfos/db';
-import {
-  getQuestion,
-  getQuestions,
-  insertQuestion,
-} from '@/features/questions/db';
-import { canCreateQuestion } from '@/features/questions/permissions';
-import { PLAN_LIMIT_MESSAGE } from '@/lib/errorToast';
-import {
-  generateAiQuestion,
-  generateAiQuestionFeedback,
-} from '@/services/ai/questions';
+import { getQuestion } from '@/features/questions/db';
+import { generateAiQuestionFeedback } from '@/services/ai/questions';
 import { getCurrentUser } from '@/services/clerk/lib/getCurrentUser';
-import { createDataStreamResponse } from 'ai';
 import z from 'zod';
 
 const schema = z.object({

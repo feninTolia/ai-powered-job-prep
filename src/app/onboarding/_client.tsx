@@ -11,6 +11,8 @@ export function OnboardingClient({ userId }: { userId: string }) {
   useEffect(() => {
     const intervalId = setInterval(async () => {
       const user = await getUser(userId);
+      console.log('user 1 - ', user);
+
       if (user === null) return;
 
       router.replace('/app');
