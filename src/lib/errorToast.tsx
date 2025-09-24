@@ -25,7 +25,7 @@ export function errorToast(message: string) {
   }
 
   if (message === RATE_LIMIT_MESSAGE) {
-    const toastId = toast.error('Whoa! Slow down.', {
+    toast.error('Whoa! Slow down.', {
       description: 'You are making too many requests. Please try again later.',
     });
 
